@@ -1,13 +1,14 @@
 from tornado import web, ioloop
 
-from app import Main, Delete, Add
+from app import Main, Delete, Add, Update
 
 
 def make_app():
     return web.Application([
         (r'/', Main),
         (r'/delete-music/', Delete),
-        (r'/add-music/', Add)
+        (r'/add-music/', Add),
+        (r'/update/', Update)
     ])
 
 
