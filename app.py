@@ -26,6 +26,11 @@ class Delete(web.RequestHandler):
         ).first()
 		session.delete(treck)
 		session.commit()
+
+		Update.send_message(
+            	self.render_string('templates/music-list.html', **{'music': session.query(Music).all()})
+        )
+        
 		self.redirect('/')
 
 
@@ -57,6 +62,11 @@ class Add(web.RequestHandler):
 	            len = minutes + ":" + seconds
 	        ))
 			session.commit()
+
+			Update.send_message(
+            	self.render_string('templates/music-list.html', **{'music': session.query(Music).all()})
+        	)
+
 			self.redirect('/')
 
 		else:
@@ -67,3 +77,23 @@ class Add(web.RequestHandler):
 					}
 
 			self.render('templates/index.html', **content)
+
+
+class Update(websocket.WebSocketHandler):
+    clients = []
+
+    def open(self, *args: str, **kwargs: str):
+        Update.clients.append(self)
+        super(Update, self).open(*args, **kwargs)
+
+    def close(self, code=None, reason=None):
+        Update.clients.remove(self)
+
+    @classmethod
+    def send_message(cls, message):
+        for client in cls.clients:
+
+            try:
+                client.write_message(message)
+            except WebSocketClosedError:
+                pass
