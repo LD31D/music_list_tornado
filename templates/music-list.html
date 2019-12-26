@@ -1,0 +1,26 @@
+						{% if music != [] %}
+							{% for treck in music %}
+								<div class="col-md-4">
+									<div class="block">
+										<div class="card text-white bg-dark mx-md-3 mb-2" style="max-width: 18rem;">
+
+										  <div class="card-header">{{ treck.autor }}</div>
+
+											<div class="card-body">
+												<h5 class="card-title">{{ treck.name }}</h5>
+												<p class="card-text">{{ treck.len }}</p>
+												
+												<form method="post" action="/delete-music/">	
+													<div class="text-center">
+														<input type="hidden" name="id" value="{{ treck.id }}">
+														<input type="submit" class="btn btn-outline-danger" value="Delete">
+													</div>
+												</form>
+
+											</div>
+
+										</div>
+									</div>
+								</div>
+							{% end %}
+						{% end %}
